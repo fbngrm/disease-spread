@@ -13,9 +13,9 @@ def preprocess_data(features, labels):
 
     # add labels to dataframe
     features = features.join(labels)
-    
+
     # separate san juan and iquitos
-    sj = features.loc['sj']
-    iq = features.loc['iq']
+    city_sj = features.query("city=='sj'")
+    city_iq = features.query("city=='iq'")
     
-    return sj, iq
+    return city_sj, city_iq
