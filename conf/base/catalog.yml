@@ -2,3 +2,19 @@
 #
 # Documentation for this file format can be found in "The Data Catalog"
 # Link: https://docs.kedro.org/en/stable/data/data_catalog.html
+
+features:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/dengue_features_train.csv
+
+labels:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/dengue_labels_train.csv
+
+city_sj:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/city_sj.pq
+
+city_iq:
+  type: pandas.ParquetDataset
+  filepath: data/02_intermediate/city_iq.pq
