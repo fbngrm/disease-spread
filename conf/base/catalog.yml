@@ -37,3 +37,14 @@ city_iq_train:
 city_iq_test: 
   type: pandas.ParquetDataset
   filepath: data/03_primary/city_iq_test.pq
+
+
+sj_best_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/sj_best_model.pickle
+  versioned: true
+
+iq_best_model:
+  type: pickle.PickleDataset
+  filepath: data/06_models/iq_best_model.pickle
+  versioned: true
