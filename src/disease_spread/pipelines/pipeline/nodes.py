@@ -19,3 +19,13 @@ def preprocess_data(features, labels):
     city_iq = features.query("city=='iq'")
     
     return city_sj, city_iq
+
+def split_up(city_sj, city_iq):
+    city_sj_train = city_sj.head(800)
+    city_sj_test = city_sj.tail(city_sj.shape[0] - 800)
+
+    city_iq_train = city_iq.head(400)
+    city_iq_test = city_iq.tail(city_iq.shape[0] - 400)
+
+    return city_sj_train, city_sj_test, city_iq_train, city_iq_test
+

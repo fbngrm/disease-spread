@@ -18,3 +18,22 @@ city_sj:
 city_iq:
   type: pandas.ParquetDataset
   filepath: data/02_intermediate/city_iq.pq
+
+city_sj_train:
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/city_sj_train.pq
+
+
+city_sj_test:
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/city_sj_test.pq
+
+
+city_iq_train:
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/city_iq_train.pq
+
+
+city_iq_test: 
+  type: pandas.ParquetDataset
+  filepath: data/03_primary/city_iq_test.pq
