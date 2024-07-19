@@ -1,6 +1,6 @@
 from kedro.pipeline import Pipeline, node, pipeline
 
-from .nodes import preprocess_data, split_up, best_model
+from .nodes import preprocess_data, split_up, best_model, predict
 
 def create_pipeline(**kwargs) -> Pipeline:
     return pipeline(
@@ -27,8 +27,8 @@ def create_pipeline(**kwargs) -> Pipeline:
 
             node(
                 func=predict,
-                inputs=["predict_data"],
-                outputs=["predicted_data"],
+                inputs=["predict_data","sj_best_model", "iq_best_model", "submission_data"],
+                outputs="predicted_data",
                 name="predict_node",
             ),
         ] 

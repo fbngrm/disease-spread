@@ -87,16 +87,17 @@ def predict_model(sj_best_model, iq_best_model,sj_predict, iq_predict):
     # predict city iq
     iq_predicted = iq_best_model.predict(iq_predict)
 
-
     # combine the predicted data for the two cities
-    predicted_data =
-
-
-
-def predict(predict_data,sj_best_model, iq_best_model):
-    sj_predict, iq_predict  = split(predict_data)
-    predicted_data=predict_model(sj_best_model, iq_best_model,sj_predict, iq_predict)
+    predicted_data = np.concatenate([sj_predicted, iq_predicted])
     return predicted_data
 
 
+def predict(predict_data,sj_best_model, iq_best_model, submission_data):
+    sj_predict, iq_predict  = split(predict_data)
+    predicted_data=predict_model(sj_best_model, iq_best_model,sj_predict, iq_predict)
+
+    #submission format
+    submission_data.total_cases = predicted_data
     
+    return submission_data
+

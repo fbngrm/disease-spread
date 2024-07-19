@@ -57,4 +57,9 @@ predicted_data:
   type: pandas.CSVDataset
   filepath: data/08_reporting/predicted_data.csv
 
+submission_data:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/submission_format.csv
+
+
 
