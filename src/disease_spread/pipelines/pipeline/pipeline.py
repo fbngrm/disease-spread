@@ -24,5 +24,12 @@ def create_pipeline(**kwargs) -> Pipeline:
                 outputs=["sj_best_model", "iq_best_model"],
                 name="best_model_node",
             ),
+
+            node(
+                func=predict,
+                inputs=["predict_data"],
+                outputs=["predicted_data"],
+                name="predict_node",
+            ),
         ] 
     )

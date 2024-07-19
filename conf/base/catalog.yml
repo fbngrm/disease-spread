@@ -48,3 +48,13 @@ iq_best_model:
   type: pickle.PickleDataset
   filepath: data/06_models/iq_best_model.pickle
   versioned: true
+
+predict_data:
+  type: pandas.CSVDataset
+  filepath: data/01_raw/dengue_features_test.csv
+
+predicted_data:
+  type: pandas.CSVDataset
+  filepath: data/08_reporting/predicted_data.csv
+
+

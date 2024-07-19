@@ -20,8 +20,7 @@ def preprocess_data(features, labels):
     features = features.join(labels)
 
     # separate san juan and iquitos
-    city_sj = features.query("city=='sj'")
-    city_iq = features.query("city=='iq'")
+    city_sj,city_iq  = split(features)
     
     return city_sj, city_iq
 
@@ -34,7 +33,8 @@ def split_up(city_sj, city_iq):
 
     return city_sj_train, city_sj_test, city_iq_train, city_iq_test
 
-
+def split(features):
+    return features.query("city=='sj'"), features.query("city=='iq'")
 
 def get_best_model(train, test):
     # Step 1: specify the form of the model
@@ -79,5 +79,24 @@ def best_model(city_sj_train, city_sj_test, city_iq_train, city_iq_test):
     sj_best_model = get_best_model(city_sj_train, city_sj_test)
     iq_best_model = get_best_model(city_iq_train, city_iq_test)
     return sj_best_model, iq_best_model
+
+def predict_model(sj_best_model, iq_best_model,sj_predict, iq_predict):
+    # predict city sj
+    sj_predicted = sj_best_model.predict(sj_predict)
+
+    # predict city iq
+    iq_predicted = iq_best_model.predict(iq_predict)
+
+
+    # combine the predicted data for the two cities
+    predicted_data =
+
+
+
+def predict(predict_data,sj_best_model, iq_best_model):
+    sj_predict, iq_predict  = split(predict_data)
+    predicted_data=predict_model(sj_best_model, iq_best_model,sj_predict, iq_predict)
+    return predicted_data
+
 
     
