@@ -83,12 +83,21 @@ def best_model(city_sj_train, city_sj_test, city_iq_train, city_iq_test):
 def predict_model(sj_best_model, iq_best_model,sj_predict, iq_predict):
     # predict city sj
     sj_predicted = sj_best_model.predict(sj_predict)
+    # convert non-finite values (NA or inf) to 0
+    sj_predicted = sj_predicted.fillna(0) 
+
 
     # predict city iq
     iq_predicted = iq_best_model.predict(iq_predict)
+    # convert non-finite values (NA or inf) to 0
+    iq_predicted = iq_predicted.fillna(0)
 
     # combine the predicted data for the two cities
     predicted_data = np.concatenate([sj_predicted, iq_predicted])
+
+    # convert all prediction to astype(int)
+    predicted_data=predicted_data.astype(int)
+
     return predicted_data
 
 
