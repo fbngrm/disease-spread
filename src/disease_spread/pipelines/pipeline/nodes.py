@@ -4,6 +4,15 @@ import statsmodels.api as sm
 
 from statsmodels.tools import eval_measures
 import statsmodels.formula.api as smf
+
+def lag(x, n):
+    if n == 0:
+        return x
+    if isinstance(x, pd.Series):
+        return x.shift(n)
+    else:
+        x = pd.Series(x)
+        return x.shift(n)
  
 def preprocess_data(features, labels):
     # select features we want
@@ -20,8 +29,16 @@ def preprocess_data(features, labels):
     features = features.join(labels)
 
     # separate san juan and iquitos
-    city_sj,city_iq  = split(features)
-    
+    city_sj, city_iq  = split(features)
+    city_sj['reanalysis_specific_humidity_g_per_kg_lag_t1'] = \
+        lag(city_sj['reanalysis_specific_humidity_g_per_kg'], 1)
+    city_sj['reanalysis_specific_humidity_g_per_kg_lag_t2'] = \
+            lag(city_sj['reanalysis_specific_humidity_g_per_kg'], 2)
+    city_iq['reanalysis_specific_humidity_g_per_kg_lag_t1'] = \
+        lag(city_iq['reanalysis_specific_humidity_g_per_kg'], 1)
+    city_iq['reanalysis_specific_humidity_g_per_kg_lag_t2'] =  \
+        lag(city_iq['reanalysis_specific_humidity_g_per_kg'], 2)
+
     return city_sj, city_iq
 
 def split_up(city_sj, city_iq):
@@ -42,7 +59,9 @@ def get_best_model(train, test):
                     "reanalysis_specific_humidity_g_per_kg + " \
                     "reanalysis_dew_point_temp_k + " \
                     "station_min_temp_c + " \
-                    "station_avg_temp_c"
+                    "station_avg_temp_c + " \
+                    "reanalysis_specific_humidity_g_per_kg_lag_t1 + " \
+                    "reanalysis_specific_humidity_g_per_kg_lag_t2"
     
     grid = 10 ** np.arange(-8, -3, dtype=np.float64)
                     
@@ -80,12 +99,21 @@ def best_model(city_sj_train, city_sj_test, city_iq_train, city_iq_test):
     iq_best_model = get_best_model(city_iq_train, city_iq_test)
     return sj_best_model, iq_best_model
 
-def predict_model(sj_best_model, iq_best_model,sj_predict, iq_predict):
+def predict_model(sj_best_model, iq_best_model, sj_predict, iq_predict):
+
+    sj_predict['reanalysis_specific_humidity_g_per_kg_lag_t1'] = \
+        lag(sj_predict['reanalysis_specific_humidity_g_per_kg'], 1)
+    sj_predict['reanalysis_specific_humidity_g_per_kg_lag_t2'] = \
+            lag(sj_predict['reanalysis_specific_humidity_g_per_kg'], 2)
+    iq_predict['reanalysis_specific_humidity_g_per_kg_lag_t1'] = \
+        lag(iq_predict['reanalysis_specific_humidity_g_per_kg'], 1)
+    iq_predict['reanalysis_specific_humidity_g_per_kg_lag_t2'] =  \
+        lag(iq_predict['reanalysis_specific_humidity_g_per_kg'], 2)
+
     # predict city sj
     sj_predicted = sj_best_model.predict(sj_predict)
     # convert non-finite values (NA or inf) to 0
     sj_predicted = sj_predicted.fillna(0) 
-
 
     # predict city iq
     iq_predicted = iq_best_model.predict(iq_predict)
@@ -95,7 +123,6 @@ def predict_model(sj_best_model, iq_best_model,sj_predict, iq_predict):
     # combine the predicted data for the two cities
     predicted_data = np.concatenate([sj_predicted, iq_predicted])
 
-
     # convert all prediction to astype(int)
     predicted_data=predicted_data.astype(int)
 
@@ -103,8 +130,8 @@ def predict_model(sj_best_model, iq_best_model,sj_predict, iq_predict):
 
 
 def predict(predict_data,sj_best_model, iq_best_model, submission_data):
-    sj_predict, iq_predict  = split(predict_data)
-    predicted_data=predict_model(sj_best_model, iq_best_model,sj_predict, iq_predict)
+    sj_predict, iq_predict = split(predict_data)
+    predicted_data = predict_model(sj_best_model, iq_best_model, sj_predict, iq_predict)
 
     #submission format
     submission_data.total_cases = predicted_data
