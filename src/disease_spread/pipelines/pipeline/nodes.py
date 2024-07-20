@@ -95,6 +95,7 @@ def predict_model(sj_best_model, iq_best_model,sj_predict, iq_predict):
     # combine the predicted data for the two cities
     predicted_data = np.concatenate([sj_predicted, iq_predicted])
 
+
     # convert all prediction to astype(int)
     predicted_data=predicted_data.astype(int)
 
